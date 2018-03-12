@@ -2,6 +2,7 @@
 
 #include "Mode.h"
 #include "Logger.h"
+
 #include <iostream>
 #include <SFML/Graphics.hpp>
 
