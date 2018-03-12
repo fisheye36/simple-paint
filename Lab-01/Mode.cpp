@@ -3,10 +3,10 @@
 #include <SFML/Graphics.hpp>
 
 Mode::State Mode::current = Mode::None;
+std::wstring Mode::m_currentStateLetter = L"";
 sf::Vector2f Mode::mousePosition;
 sf::Color Mode::colorForeground = sf::Color::Red;
 sf::Color Mode::colorBackground = sf::Color::Yellow;
-std::wstring Mode::m_currentStateLetter = L"";
 
 void Mode::updateState(Mode::State newState)
 {

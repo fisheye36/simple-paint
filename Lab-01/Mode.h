@@ -6,8 +6,6 @@
 
 class Mode
 {
-    friend void Menu::draw(sf::RenderTarget& target, sf::RenderStates states) const;
-
 public:
     enum State
     {
@@ -32,10 +30,8 @@ public:
 
 public:
     static State current;
+    static std::wstring m_currentStateLetter;
     static sf::Vector2f mousePosition;
     static sf::Color colorForeground;
     static sf::Color colorBackground;
-
-private:
-    static std::wstring m_currentStateLetter;
 };
