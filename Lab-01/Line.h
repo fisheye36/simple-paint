@@ -2,6 +2,7 @@
 
 #include "Shape.h"
 #include "Mode.h"
+#include "Logger.h"
 #include <iostream>
 #include <SFML/Graphics.hpp>
 
@@ -15,8 +16,7 @@ public:
         line[1].color = Mode::colorBackground;
         line[1].position = m_endPosition;
 
-        std::cout << "Line x = " << m_startPosition.x
-                  << ", Line y = " << m_startPosition.y << std::endl;
+        Logger::logPosition(std::cout, "line", m_startPosition.x, m_startPosition.y);
     }
     virtual ~Line() = default;
     virtual void update()

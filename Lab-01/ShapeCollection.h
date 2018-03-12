@@ -22,4 +22,3 @@ private:
     sf::Vector2f m_initialShapePosition;
     std::vector<Shape *> m_collection;
 };
-

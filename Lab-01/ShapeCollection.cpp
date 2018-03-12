@@ -4,6 +4,7 @@
 #include "Rectangle.h"
 #include "Circle.h"
 #include "Mode.h"
+#include "Logger.h"
 #include <iostream>
 
 ShapeCollection::~ShapeCollection()
@@ -48,7 +49,7 @@ void ShapeCollection::saveNewShape()
         m_newShape = nullptr;
         m_currentlyDrawing = false;
     }
-    std::cout << "Shapes saved: " << m_collection.size() << std::endl;
+    Logger::log(std::cout, "shapes saved", m_collection.size());
 }
 
 void ShapeCollection::draw(sf::RenderTarget& target, sf::RenderStates states) const

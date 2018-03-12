@@ -2,6 +2,7 @@
 
 #include "Shape.h"
 #include "Mode.h"
+#include "Logger.h"
 
 #include <iostream>
 #include <cmath>
@@ -18,8 +19,7 @@ public:
         circle.setOutlineThickness(1.0f);
         circle.setPosition(m_startPosition);
 
-        std::cout << "Circle x = " << m_startPosition.x
-            << ", Circle y = " << m_startPosition.y << std::endl;
+        Logger::logPosition(std::cout, "circle", m_startPosition.x, m_startPosition.y);
     }
     virtual ~Circle() = default;
     virtual void update()

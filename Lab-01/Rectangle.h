@@ -2,6 +2,7 @@
 
 #include "Shape.h"
 #include "Mode.h"
+#include "Logger.h"
 #include <iostream>
 #include <SFML/Graphics.hpp>
 
@@ -16,8 +17,7 @@ public:
         rectangle.setOutlineThickness(1.0f);
         rectangle.setPosition(m_startPosition);
 
-        std::cout << "Rectangle x = " << m_startPosition.x
-            << ", Rectangle y = " << m_startPosition.y << std::endl;
+        Logger::logPosition(std::cout, "rectangle", m_startPosition.x, m_startPosition.y);
     }
     virtual ~Rectangle() = default;
     virtual void update()

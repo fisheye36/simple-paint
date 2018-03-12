@@ -2,6 +2,7 @@
 #include "Menu.h"
 #include "ShapeCollection.h"
 #include "Mode.h"
+#include "Logger.h"
 
 #include <iostream>
 
@@ -68,8 +69,7 @@ int main()
                 int mouseX = getValidCoordinates(event.mouseMove.x, 0, WinWidth);
                 int mouseY = getValidCoordinates(event.mouseMove.y, 0, WinHeight);
                 Mode::updateMousePosition(sf::Vector2f(mouseX, mouseY));
-                std::cout << "mouse x = " << mouseX
-                          << ", mouse y = " << mouseY << std::endl;
+                Logger::logPosition(std::cout, "mouse", mouseX, mouseY);
             }
             else if (event.type == sf::Event::MouseButtonPressed
                      && event.mouseButton.button == sf::Mouse::Left
@@ -93,12 +93,12 @@ int main()
     return 0;
 }
 
-int getValidCoordinates(int coordinates, int minCoord, int maxCoord)
+int getValidCoordinates(int coordinates, int min, int max)
 {
-    if (coordinates < minCoord)
-        coordinates = minCoord;
-    else if (coordinates > maxCoord)
-        coordinates = maxCoord;
+    if (coordinates < min)
+        coordinates = min;
+    else if (coordinates > max)
+        coordinates = max;
 
     return coordinates;
 }
