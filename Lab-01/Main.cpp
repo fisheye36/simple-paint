@@ -72,14 +72,12 @@ int main()
                 Logger::logPosition(std::cout, "mouse", mouseX, mouseY);
             }
             else if (event.type == sf::Event::MouseButtonPressed
-                     && event.mouseButton.button == sf::Mouse::Left
-                     && Mode::current != Mode::None)
+                     && event.mouseButton.button == sf::Mouse::Left)
             {
                 shapeCollection.drawNewShape();
             }
             else if (event.type == sf::Event::MouseButtonReleased
-                     && event.mouseButton.button == sf::Mouse::Left
-                     && Mode::current != Mode::None)
+                     && event.mouseButton.button == sf::Mouse::Left)
             {
                 shapeCollection.saveNewShape();
             }

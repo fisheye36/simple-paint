@@ -5,7 +5,10 @@
 #include "Circle.h"
 #include "Mode.h"
 #include "Logger.h"
+
 #include <iostream>
+#include <vector>
+#include <memory>
 
 ShapeCollection::~ShapeCollection()
 {
@@ -14,51 +17,47 @@ ShapeCollection::~ShapeCollection()
     m_collection.clear();
 }
 
-void ShapeCollection::drawNewShape()
+void ShapeCollection::drawNewShape() const
 {
-    if (!m_currentlyDrawing)
-    {
+    m_remembered = Mode::current;
+    if (!m_newShape)
         m_initialShapePosition = Mode::mousePosition;
-        m_currentlyDrawing = true;
-    }
-    else
-    {
-        delete m_newShape;
-    }
-
-    switch (Mode::current)
-    {
-        case Mode::Line:
-            m_newShape = new Line(m_initialShapePosition);
-            break;
-        case Mode::Rectangle:
-        case Mode::FilledRectangle:
-            m_newShape = new Rectangle(m_initialShapePosition);
-            break;
-        case Mode::Circle:
-            m_newShape = new Circle(m_initialShapePosition);
-            break;
-    }
+    m_newShape.reset(instantiateShape());
 }
 
 void ShapeCollection::saveNewShape()
 {
     if (m_newShape)
-    {
-        m_collection.push_back(m_newShape);
-        m_newShape = nullptr;
-        m_currentlyDrawing = false;
-    }
+        m_collection.push_back(m_newShape.release());
+
     Logger::log(std::cout, "shapes saved", m_collection.size());
+}
+
+Shape * ShapeCollection::instantiateShape() const
+{
+    switch (m_remembered)
+    {
+        case Mode::Line:
+            return new Line(m_initialShapePosition);
+        case Mode::Rectangle:
+        case Mode::FilledRectangle:
+            return new Rectangle(m_initialShapePosition);
+        case Mode::Circle:
+            return new Circle(m_initialShapePosition);
+        default:
+            return nullptr;
+    }
 }
 
 void ShapeCollection::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-    for (auto shape : m_collection)
+    for (const auto shape : m_collection)
     {
         target.draw(*shape, states);
     }
 
+    if (m_newShape && m_remembered != Mode::current)
+        drawNewShape();
     if (m_newShape)
     {
         m_newShape->update();
