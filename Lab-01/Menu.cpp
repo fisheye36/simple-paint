@@ -1,59 +1,93 @@
 #include "Menu.h"
 #include "Mode.h"
+#include "Config.h"
+#include "Logger.h"
 #include "font.h"
+
+#include <iostream>
 #include <SFML/Graphics.hpp>
+
+using namespace Layout;
 
 Menu::Menu()
 {
     m_font.loadFromMemory((void *) FontData, FontDataSize);
-    m_text->setFont(m_font);
-    m_text->setFillColor(sf::Color::White);
-    m_text->setCharacterSize(12u);
+    m_text.setFont(m_font);
+    m_text.setFillColor(sf::Color::White);
+    m_text.setCharacterSize(12u);
 
-    m_rectangle.setFillColor(sf::Color::Transparent);
-    m_rectangle.setOutlineColor(sf::Color::White);
-    m_rectangle.setOutlineThickness(1.0f);
-    m_rectangle.setPosition(2.0f, 62.0f);
+    m_pickFg.setOutlineColor(sf::Color::White);
+    m_pickFg.setOutlineThickness(1.0f);
+    m_pickFg.setPosition(PickFgPosX, PickFgPosY);
 
-    unsigned x, y;
-    m_colorsPixels = new sf::Uint8[m_ColorsSizeX * m_ColorsSizeY * 4u];
-    for (x = 0u; x < 255u; ++x)
+    m_pickBg.setOutlineColor(sf::Color::White);
+    m_pickBg.setOutlineThickness(1.0f);
+    m_pickBg.setPosition(PickBgPosX, PickBgPosY);
+
+    m_workspace.setFillColor(sf::Color::Transparent);
+    m_workspace.setOutlineColor(sf::Color::White);
+    m_workspace.setOutlineThickness(1.0f);
+    m_workspace.setPosition(WorkspacePosX, WorkspacePosY);
+
+    m_colorsPixels = new sf::Uint8[ColorsWidth * ColorsHeight * 4u];
+    const unsigned colorsRowHeight { ColorsHeight / 2u };
+    for (unsigned x = 0u; x < RGBScale; ++x)
     {
-        for (y = 0u; y < 30u; ++y)
+        for (unsigned y = 0u; y < colorsRowHeight; ++y)
         {
-            drawToColorPixels(x, y, x, 255, 0);
-            drawToColorPixels(x + 255u, y, 255, 255 - x, 0);
-            drawToColorPixels(x + 510u, y, 255, 0, x);
-            drawToColorPixels(254u - x, y + 30u, 0, 255, 255 - x);
-            drawToColorPixels(509u - x, y + 30u, 0, x, 255);
-            drawToColorPixels(764u - x, y + 30u, 255 - x, 0, 255);
+            drawToColorPixels(x, y, x, RGBScale, 0u);
+            drawToColorPixels(x + RGBScale, y, RGBScale, RGBScale - x, 0u);
+            drawToColorPixels(x + RGBScale * 2u, y, RGBScale, 0u, x);
+
+            drawToColorPixels(RGBScale - 1u - x, y + colorsRowHeight,
+                              0u, RGBScale, RGBScale - x);
+            drawToColorPixels(RGBScale * 2u - 1u - x, y + colorsRowHeight,
+                              0u, x, RGBScale);
+            drawToColorPixels(RGBScale * 3u - 1u - x, y + colorsRowHeight,
+                              RGBScale - x, 0u, RGBScale);
         }
     }
 
-    m_colorsTexture.create(m_ColorsSizeX, m_ColorsSizeY);
+    m_colorsTexture.create(ColorsWidth, ColorsHeight);
     m_colorsTexture.update(m_colorsPixels);
 
     m_colorsSprite.setTexture(m_colorsTexture);
-    m_colorsSprite.setPosition(1, 1);
+    m_colorsSprite.setPosition(ColorsMargin, ColorsMargin);
+}
+
+void Menu::saveToFile(const sf::Window& window) const
+{
+    sf::Texture texture;
+    texture.create(WinWidth, WinHeight);
+    texture.update(window);
+    sf::Image image { texture.copyToImage() };
+    if (!image.saveToFile("drawing.png"))
+        Logger::log(std::cerr, "error while writing screenshot to", "drawing.png");
 }
 
 void Menu::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-    drawText(target, 5, 600, L"f - wybór koloru rysowania");
-    drawText(target, 5, 615, L"b - wybór koloru wype³niania");
-    drawText(target, 5, 630, L"l - rysowanie linii");
+    m_pickFg.setFillColor(Mode::colorForeground);
+    m_pickBg.setFillColor(Mode::colorBackground);
 
-    drawText(target, 200, 600, L"r - rysowanie prostok¹ta");
-    drawText(target, 200, 615, L"a - rysowanie wype³nionego prostok¹ta");
-    drawText(target, 200, 630, L"c - rysowanie okrêgu");
+    drawText(target, ToolbarCol1PosX, ToolbarRow1PosY, L"f - wybór koloru rysowania");
+    drawText(target, ToolbarCol1PosX, ToolbarRow2PosY, L"b - wybór koloru wype³niania");
+    drawText(target, ToolbarCol1PosX, ToolbarRow3PosY, L"l - rysowanie linii");
 
-    drawText(target, 470, 600, L"w - zapis do pliku");
-    drawText(target, 470, 615, L"o - odczyt z pliku");
-    drawText(target, 470, 630, L"esc - wyjœcie");
+    drawText(target, ToolbarCol2PosX, ToolbarRow1PosY, L"r - rysowanie prostok¹ta");
+    drawText(target, ToolbarCol2PosX, ToolbarRow2PosY,
+             L"a - rysowanie wype³nionego prostok¹ta");
+    drawText(target, ToolbarCol2PosX, ToolbarRow3PosY, L"c - rysowanie okrêgu");
 
-    std::wstring current = L"Aktualne: " + Mode::m_currentStateLetter;
-    drawText(target, 650, 615, current);
+    drawText(target, ToolbarCol3PosX, ToolbarRow1PosY, L"w - zapis do pliku");
+    drawText(target, ToolbarCol3PosX, ToolbarRow2PosY, L"o - odczyt z pliku");
+    drawText(target, ToolbarCol3PosX, ToolbarRow3PosY, L"esc - wyjœcie");
 
-    target.draw(m_rectangle, states);
+    const std::wstring current { L"Aktualne: " + Mode::m_currentStateLetter };
+    drawText(target, ToolbarCol4PosX, ToolbarRow2PosY, current);
+
+    target.draw(m_workspace, states);
     target.draw(m_colorsSprite, states);
+    target.draw(m_pickFg, states);
+    target.draw(m_pickBg, states);
 }

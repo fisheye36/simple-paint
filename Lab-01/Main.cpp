@@ -13,8 +13,8 @@ int getValidCoordinates(int coordinates, int min, int max);
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(WinWidth, WinHeight), WinTitle,
-                            sf::Style::Titlebar | sf::Style::Close);
+    sf::RenderWindow window(sf::VideoMode(Layout::WinWidth, Layout::WinHeight),
+                            Layout::WinTitle, sf::Style::Titlebar | sf::Style::Close);
     window.setFramerateLimit(60u);
 
     sf::Event event;
@@ -66,8 +66,8 @@ int main()
             }
             else if (event.type == sf::Event::MouseMoved)
             {
-                int mouseX = getValidCoordinates(event.mouseMove.x, 0, WinWidth);
-                int mouseY = getValidCoordinates(event.mouseMove.y, 0, WinHeight);
+                int mouseX = getValidCoordinates(event.mouseMove.x, 0, Layout::WinWidth);
+                int mouseY = getValidCoordinates(event.mouseMove.y, 0, Layout::WinHeight);
                 Mode::updateMousePosition(sf::Vector2f(mouseX, mouseY));
                 Logger::logPosition(std::cout, "mouse", mouseX, mouseY);
             }
