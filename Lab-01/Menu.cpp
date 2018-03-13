@@ -11,23 +11,25 @@ using namespace Layout;
 
 Menu::Menu()
 {
-    m_font.loadFromMemory((void *) FontData, FontDataSize);
-    m_text.setFont(m_font);
-    m_text.setFillColor(sf::Color::White);
-    m_text.setCharacterSize(12u);
+    initializeColors();
+    initializePicks();
+    initializeWorkspace();
+    initializeToolbar();
+}
 
-    m_pickFg.setOutlineColor(sf::Color::White);
-    m_pickFg.setOutlineThickness(1.0f);
-    m_pickFg.setPosition(PickFgPosX, PickFgPosY);
+void Menu::saveToFile(const sf::Window& window) const
+{
+    sf::Texture texture;
+    texture.create(WinWidth, WinHeight);
+    texture.update(window);
+    sf::Image image { texture.copyToImage() };
+    image.saveToFile("drawing.png");
+}
 
-    m_pickBg.setOutlineColor(sf::Color::White);
-    m_pickBg.setOutlineThickness(1.0f);
-    m_pickBg.setPosition(PickBgPosX, PickBgPosY);
-
-    m_workspace.setFillColor(sf::Color::Transparent);
-    m_workspace.setOutlineColor(sf::Color::White);
-    m_workspace.setOutlineThickness(1.0f);
-    m_workspace.setPosition(WorkspacePosX, WorkspacePosY);
+void Menu::initializeColors()
+{
+    m_colorsMask.setFillColor(BackgroundColor);
+    m_colorsMask.setPosition(ColorsMaskPosX, ColorsMaskPosY);
 
     m_colorsPixels = new sf::Uint8[ColorsWidth * ColorsHeight * 4u];
     const unsigned colorsRowHeight { ColorsHeight / 2u };
@@ -52,23 +54,61 @@ Menu::Menu()
     m_colorsTexture.update(m_colorsPixels);
 
     m_colorsSprite.setTexture(m_colorsTexture);
-    m_colorsSprite.setPosition(ColorsMargin, ColorsMargin);
+    m_colorsSprite.setPosition(ColorsPosX, ColorsPosY);
 }
 
-void Menu::saveToFile(const sf::Window& window) const
+void Menu::initializePicks()
 {
-    sf::Texture texture;
-    texture.create(WinWidth, WinHeight);
-    texture.update(window);
-    sf::Image image { texture.copyToImage() };
-    if (!image.saveToFile("drawing.png"))
-        Logger::log(std::cerr, "error while writing screenshot to", "drawing.png");
+    m_pickFg.setOutlineColor(sf::Color::White);
+    m_pickFg.setOutlineThickness(1.0f);
+    m_pickFg.setPosition(PickFgPosX, PickFgPosY);
+
+    m_pickBg.setOutlineColor(sf::Color::White);
+    m_pickBg.setOutlineThickness(1.0f);
+    m_pickBg.setPosition(PickBgPosX, PickBgPosY);
+}
+
+void Menu::initializeWorkspace()
+{
+    m_workspace.setFillColor(sf::Color::Transparent);
+    m_workspace.setOutlineColor(sf::Color::White);
+    m_workspace.setOutlineThickness(1.0f);
+    m_workspace.setPosition(WorkspacePosX, WorkspacePosY);
+}
+
+void Menu::initializeToolbar()
+{
+    m_toolbarMask.setFillColor(BackgroundColor);
+    m_toolbarMask.setPosition(ToolbarMaskPosX, ToolbarMaskPosY);
+
+    m_font.loadFromMemory((void *) FontData, FontDataSize);
+    m_text.setFont(m_font);
+    m_text.setFillColor(sf::Color::White);
+    m_text.setCharacterSize(12u);
+}
+
+void Menu::drawToColorPixels(unsigned x, unsigned y, sf::Uint8 r, sf::Uint8 g, sf::Uint8 b)
+{
+    m_colorsPixels[4u * (y * Layout::ColorsWidth + x) + 0u] = r;
+    m_colorsPixels[4u * (y * Layout::ColorsWidth + x) + 1u] = g;
+    m_colorsPixels[4u * (y * Layout::ColorsWidth + x) + 2u] = b;
+    m_colorsPixels[4u * (y * Layout::ColorsWidth + x) + 3u] = sf::Uint8(255);
+}
+
+void Menu::drawText(sf::RenderTarget & target, float x, float y, const sf::String & str) const
+{
+    m_text.setPosition(x, y);
+    m_text.setString(str);
+    target.draw(m_text);
 }
 
 void Menu::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
     m_pickFg.setFillColor(Mode::colorForeground);
     m_pickBg.setFillColor(Mode::colorBackground);
+
+    target.draw(m_colorsMask, states);
+    target.draw(m_toolbarMask, states);
 
     drawText(target, ToolbarCol1PosX, ToolbarRow1PosY, L"f - wybór koloru rysowania");
     drawText(target, ToolbarCol1PosX, ToolbarRow2PosY, L"b - wybór koloru wype³niania");
@@ -86,8 +126,8 @@ void Menu::draw(sf::RenderTarget& target, sf::RenderStates states) const
     const std::wstring current { L"Aktualne: " + Mode::m_currentStateLetter };
     drawText(target, ToolbarCol4PosX, ToolbarRow2PosY, current);
 
-    target.draw(m_workspace, states);
     target.draw(m_colorsSprite, states);
     target.draw(m_pickFg, states);
     target.draw(m_pickBg, states);
+    target.draw(m_workspace, states);
 }

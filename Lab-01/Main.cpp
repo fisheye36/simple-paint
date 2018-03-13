@@ -23,7 +23,7 @@ int main()
 
     while (window.isOpen())
     {
-        window.clear(sf::Color::Black);
+        window.clear(Layout::BackgroundColor);
 
         while (window.pollEvent(event))
         {
