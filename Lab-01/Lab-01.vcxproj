@@ -115,9 +115,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Circle.cpp" />
+    <ClCompile Include="Line.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Mode.cpp" />
+    <ClCompile Include="Rectangle.cpp" />
     <ClCompile Include="ShapeCollection.cpp" />
     <ClCompile Include="Workspace.cpp" />
   </ItemGroup>

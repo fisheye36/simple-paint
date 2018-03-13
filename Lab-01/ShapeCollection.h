@@ -1,12 +1,13 @@
 #pragma once
 
-#include "Shape.h"
 #include "Mode.h"
+#include "Shape.h"
 
-#include <vector>
 #include <memory>
+#include <vector>
 
 #include <SFML/Graphics.hpp>
+#include <SFML/System.hpp>
 
 class ShapeCollection : public sf::Drawable
 {

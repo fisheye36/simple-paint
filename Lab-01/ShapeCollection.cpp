@@ -1,10 +1,13 @@
-#include "ShapeCollection.h"
-#include "Shape.h"
-#include "Line.h"
-#include "Rectangle.h"
 #include "Circle.h"
-#include "Mode.h"
+#include "Line.h"
 #include "Logger.h"
+#include "Mode.h"
+#include "Rectangle.h"
+#include "Shape.h"
+#include "ShapeCollection.h"
+
+#include <SFML/Graphics.hpp>
+#include <SFML/System.hpp>
 
 #include <iostream>
 #include <vector>

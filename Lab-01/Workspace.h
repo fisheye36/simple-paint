@@ -1,7 +1,10 @@
 #pragma once
 
 #include "Config.h"
+
 #include <SFML/Graphics.hpp>
+#include <SFML/System.hpp>
+#include <SFML/Window.hpp>
 
 class Workspace : public sf::Drawable
 {

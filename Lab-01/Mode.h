@@ -1,8 +1,9 @@
 #pragma once
 
-#include "Menu.h"
 #include <string>
+
 #include <SFML/Graphics.hpp>
+#include <SFML/System.hpp>
 
 enum class State
 {
@@ -38,6 +39,7 @@ public:
     static State current;
     static std::wstring m_currentStateLetter;
     static sf::Vector2f mousePosition;
+
     static sf::Color colorForeground;
     static sf::Color colorBackground;
 

@@ -1,6 +1,9 @@
-#include "Workspace.h"
 #include "Config.h"
+#include "Workspace.h"
+
 #include <SFML/Graphics.hpp>
+#include <SFML/System.hpp>
+#include <SFML/Window.hpp>
 
 using namespace Layout;
 

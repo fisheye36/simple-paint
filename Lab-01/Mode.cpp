@@ -1,17 +1,20 @@
-#include "Mode.h"
 #include "Config.h"
+#include "Mode.h"
 
-#include <string>
 #include <chrono>
+#include <string>
 #include <thread>
 
 #include <SFML/Graphics.hpp>
+#include <SFML/System.hpp>
 
 State Mode::current { State::None };
 std::wstring Mode::m_currentStateLetter { L"" };
 sf::Vector2f Mode::mousePosition;
+
 sf::Color Mode::colorForeground { sf::Color::Red };
 sf::Color Mode::colorBackground { sf::Color::Yellow };
+
 State Mode::previous { State::None };
 bool Mode::save { false };
 bool Mode::load { false };
@@ -20,7 +23,7 @@ void Mode::updateState(State newState)
 {
     previous = current;
     current = newState;
-    std::thread thread;
+    std::thread thr;
 
     switch (current)
     {
@@ -48,14 +51,14 @@ void Mode::updateState(State newState)
         case State::WriteFile:
             m_currentStateLetter = L"W";
             save = true;
-            thread = std::thread(Mode::revertState, Mode::current);
-            thread.detach();
+            thr = std::thread(Mode::revertState, Mode::current);
+            thr.detach();
             break;
         case State::OpenFile:
             m_currentStateLetter = L"O";
             load = true;
-            thread = std::thread(Mode::revertState, Mode::current);
-            thread.detach();
+            thr = std::thread(Mode::revertState, Mode::current);
+            thr.detach();
             break;
     }
 }

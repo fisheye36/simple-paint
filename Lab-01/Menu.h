@@ -1,7 +1,9 @@
 #pragma once
 
 #include "Config.h"
+
 #include <SFML/Graphics.hpp>
+#include <SFML/System.hpp>
 
 class Menu : public sf::Drawable
 {

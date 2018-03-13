@@ -1,11 +1,13 @@
+#include "Config.h"
+#include "font.h"
+#include "Logger.h"
 #include "Menu.h"
 #include "Mode.h"
-#include "Config.h"
-#include "Logger.h"
-#include "font.h"
 
-#include <iostream>
+#include <string>
+
 #include <SFML/Graphics.hpp>
+#include <SFML/System.hpp>
 
 using namespace Layout;
 
@@ -69,7 +71,8 @@ void Menu::initializeToolbar()
     m_text.setCharacterSize(12u);
 }
 
-void Menu::drawToColorPixels(unsigned x, unsigned y, sf::Uint8 r, sf::Uint8 g, sf::Uint8 b)
+void Menu::drawToColorPixels(unsigned x, unsigned y,
+                             sf::Uint8 r, sf::Uint8 g, sf::Uint8 b)
 {
     m_colorsPixels[4u * (y * Layout::ColorsWidth + x) + 0u] = r;
     m_colorsPixels[4u * (y * Layout::ColorsWidth + x) + 1u] = g;
@@ -77,7 +80,8 @@ void Menu::drawToColorPixels(unsigned x, unsigned y, sf::Uint8 r, sf::Uint8 g, s
     m_colorsPixels[4u * (y * Layout::ColorsWidth + x) + 3u] = sf::Uint8(255);
 }
 
-void Menu::drawText(sf::RenderTarget & target, float x, float y, const sf::String & str) const
+void Menu::drawText(sf::RenderTarget & target, float x, float y,
+                    const sf::String & str) const
 {
     m_text.setPosition(x, y);
     m_text.setString(str);

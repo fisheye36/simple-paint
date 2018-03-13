@@ -1,13 +1,13 @@
 #include "Config.h"
-#include "ShapeCollection.h"
-#include "Menu.h"
-#include "Workspace.h"
-#include "Mode.h"
 #include "Logger.h"
+#include "Menu.h"
+#include "Mode.h"
+#include "ShapeCollection.h"
+#include "Workspace.h"
 
 #include <iostream>
 
-#include <SFML/Graphics.hpp>
+#include <SFML/System.hpp>
 #include <SFML/Window.hpp>
 
 int getValidCoordinates(int coordinates, int min, int max);
