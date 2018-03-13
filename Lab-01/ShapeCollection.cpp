@@ -10,13 +10,6 @@
 #include <vector>
 #include <memory>
 
-ShapeCollection::~ShapeCollection()
-{
-    for (auto shape : m_collection)
-        delete shape;
-    m_collection.clear();
-}
-
 void ShapeCollection::drawNewShape() const
 {
     m_remembered = Mode::current;
@@ -33,16 +26,23 @@ void ShapeCollection::saveNewShape()
     Logger::log(std::cout, "shapes saved", m_collection.size());
 }
 
+void ShapeCollection::clear()
+{
+    for (auto shape : m_collection)
+        delete shape;
+    m_collection.clear();
+}
+
 Shape * ShapeCollection::instantiateShape() const
 {
     switch (m_remembered)
     {
-        case Mode::Line:
+        case State::Line:
             return new Line(m_initialShapePosition);
-        case Mode::Rectangle:
-        case Mode::FilledRectangle:
+        case State::Rectangle:
+        case State::FilledRectangle:
             return new Rectangle(m_initialShapePosition);
-        case Mode::Circle:
+        case State::Circle:
             return new Circle(m_initialShapePosition);
         default:
             return nullptr;

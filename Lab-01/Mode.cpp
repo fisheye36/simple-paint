@@ -1,44 +1,90 @@
 #include "Mode.h"
+#include "Config.h"
+
 #include <string>
+#include <chrono>
+#include <thread>
+
 #include <SFML/Graphics.hpp>
 
-Mode::State Mode::current = Mode::None;
-std::wstring Mode::m_currentStateLetter = L"";
+State Mode::current { State::None };
+std::wstring Mode::m_currentStateLetter { L"" };
 sf::Vector2f Mode::mousePosition;
-sf::Color Mode::colorForeground = sf::Color::Red;
-sf::Color Mode::colorBackground = sf::Color::Yellow;
+sf::Color Mode::colorForeground { sf::Color::Red };
+sf::Color Mode::colorBackground { sf::Color::Yellow };
+State Mode::previous { State::None };
+bool Mode::save { false };
+bool Mode::load { false };
 
-void Mode::updateState(Mode::State newState)
+void Mode::updateState(State newState)
 {
+    previous = current;
     current = newState;
+    std::thread thread;
+
     switch (current)
     {
-        case Mode::None:
+        case State::None:
             m_currentStateLetter = L"";
             break;
-        case Mode::ColorForeground:
+        case State::ColorForeground:
             m_currentStateLetter = L"F";
             break;
-        case Mode::ColorBackground:
+        case State::ColorBackground:
             m_currentStateLetter = L"B";
             break;
-        case Mode::Line:
+        case State::Line:
             m_currentStateLetter = L"L";
             break;
-        case Mode::Rectangle:
+        case State::Rectangle:
             m_currentStateLetter = L"R";
             break;
-        case Mode::FilledRectangle:
+        case State::FilledRectangle:
             m_currentStateLetter = L"A";
             break;
-        case Mode::Circle:
+        case State::Circle:
             m_currentStateLetter = L"C";
             break;
-        case Mode::WriteFile:
+        case State::WriteFile:
             m_currentStateLetter = L"W";
+            save = true;
+            thread = std::thread(Mode::revertState, Mode::current);
+            thread.detach();
             break;
-        case Mode::OpenFile:
+        case State::OpenFile:
             m_currentStateLetter = L"O";
+            load = true;
+            thread = std::thread(Mode::revertState, Mode::current);
+            thread.detach();
             break;
     }
+}
+
+bool Mode::saveRequested()
+{
+    if (save)
+    {
+        save = false;
+        return true;
+    }
+
+    return false;
+}
+
+bool Mode::loadRequested()
+{
+    if (load)
+    {
+        load = false;
+        return true;
+    }
+
+    return false;
+}
+
+void Mode::revertState(State beforeRevert)
+{
+    std::this_thread::sleep_for(std::chrono::milliseconds(Settings::StateRevertDelayMs));
+    if (Mode::current == beforeRevert)
+        updateState(Mode::previous);
 }

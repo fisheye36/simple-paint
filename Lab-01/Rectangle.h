@@ -13,8 +13,8 @@ public:
     explicit Rectangle(const sf::Vector2f& startPosition) : Shape(startPosition)
     {
         rectangle.setOutlineColor(Mode::colorForeground);
-        rectangle.setFillColor(Mode::current == Mode::Rectangle ? sf::Color::Transparent
-                                                                : Mode::colorBackground);
+        rectangle.setFillColor(Mode::current == State::Rectangle ? sf::Color::Transparent
+                                                                 : Mode::colorBackground);
         rectangle.setOutlineThickness(1.0f);
         rectangle.setPosition(m_startPosition);
 

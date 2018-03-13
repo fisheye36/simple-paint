@@ -13,17 +13,7 @@ Menu::Menu()
 {
     initializeColors();
     initializePicks();
-    initializeWorkspace();
     initializeToolbar();
-}
-
-void Menu::saveToFile(const sf::Window& window) const
-{
-    sf::Texture texture;
-    texture.create(WinWidth, WinHeight);
-    texture.update(window);
-    sf::Image image { texture.copyToImage() };
-    image.saveToFile("drawing.png");
 }
 
 void Menu::initializeColors()
@@ -66,14 +56,6 @@ void Menu::initializePicks()
     m_pickBg.setOutlineColor(sf::Color::White);
     m_pickBg.setOutlineThickness(1.0f);
     m_pickBg.setPosition(PickBgPosX, PickBgPosY);
-}
-
-void Menu::initializeWorkspace()
-{
-    m_workspace.setFillColor(sf::Color::Transparent);
-    m_workspace.setOutlineColor(sf::Color::White);
-    m_workspace.setOutlineThickness(1.0f);
-    m_workspace.setPosition(WorkspacePosX, WorkspacePosY);
 }
 
 void Menu::initializeToolbar()
@@ -129,5 +111,4 @@ void Menu::draw(sf::RenderTarget& target, sf::RenderStates states) const
     target.draw(m_colorsSprite, states);
     target.draw(m_pickFg, states);
     target.draw(m_pickBg, states);
-    target.draw(m_workspace, states);
 }

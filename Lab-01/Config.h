@@ -57,3 +57,9 @@ namespace Layout
     const unsigned ToolbarMaskPosX   { ToolbarCol1PosX - ToolbarMargin };
     const unsigned ToolbarMaskPosY   { ToolbarRow1PosY - WorkspaceMargin };
 }
+
+namespace Settings
+{
+    const std::string ScreenshotFileName { "drawing.png" };
+    const unsigned StateRevertDelayMs    { 1000u };
+}

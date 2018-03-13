@@ -1,6 +1,7 @@
 #include "Config.h"
-#include "Menu.h"
 #include "ShapeCollection.h"
+#include "Menu.h"
+#include "Workspace.h"
 #include "Mode.h"
 #include "Logger.h"
 
@@ -18,8 +19,9 @@ int main()
     window.setFramerateLimit(60u);
 
     sf::Event event;
-    Menu menu;
     ShapeCollection shapeCollection;
+    Menu menu;
+    Workspace workspace;
 
     while (window.isOpen())
     {
@@ -39,28 +41,28 @@ int main()
                         window.close();
                         break;
                     case sf::Keyboard::F:
-                        Mode::updateState(Mode::ColorForeground);
+                        Mode::updateState(State::ColorForeground);
                         break;
                     case sf::Keyboard::B:
-                        Mode::updateState(Mode::ColorBackground);
+                        Mode::updateState(State::ColorBackground);
                         break;
                     case sf::Keyboard::L:
-                        Mode::updateState(Mode::Line);
+                        Mode::updateState(State::Line);
                         break;
                     case sf::Keyboard::R:
-                        Mode::updateState(Mode::Rectangle);
+                        Mode::updateState(State::Rectangle);
                         break;
                     case sf::Keyboard::A:
-                        Mode::updateState(Mode::FilledRectangle);
+                        Mode::updateState(State::FilledRectangle);
                         break;
                     case sf::Keyboard::C:
-                        Mode::updateState(Mode::Circle);
+                        Mode::updateState(State::Circle);
                         break;
                     case sf::Keyboard::W:
-                        Mode::updateState(Mode::WriteFile);
+                        Mode::updateState(State::WriteFile);
                         break;
                     case sf::Keyboard::O:
-                        Mode::updateState(Mode::OpenFile);
+                        Mode::updateState(State::OpenFile);
                         break;
                 }
             }
@@ -83,8 +85,19 @@ int main()
             }
         }
 
-        window.draw(shapeCollection);
+        if (Mode::loadRequested())
+        {
+            workspace.loadFromFile();
+            shapeCollection.clear();
+        }
+        else
+        {
+            window.draw(shapeCollection);
+        }
         window.draw(menu);
+        window.draw(workspace);
+        if (Mode::saveRequested())
+            workspace.saveToFile(window);
         window.display();
     }
 
