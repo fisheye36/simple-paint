@@ -15,18 +15,27 @@ State Mode::current { State::None };
 std::wstring Mode::m_currentStateLetter { L"" };
 sf::Vector2f Mode::mousePosition;
 
-sf::Color Mode::colorForeground { sf::Color::Red };
-sf::Color Mode::colorBackground { sf::Color::Yellow };
+sf::Color Mode::colorForeground { sf::Color::White };
+sf::Color Mode::colorBackground { sf::Color::Black };
 
-State Mode::previous { State::None };
-bool Mode::save { false };
-bool Mode::load { false };
+sf::Image Mode::m_image;
+State Mode::m_previous { State::None };
+bool Mode::m_save { false };
+bool Mode::m_load { false };
+
+void Mode::initializeTexture(sf::Uint8 * colorsPixels)
+{
+    sf::Texture texture;
+    texture.create(Layout::ColorsWidth, Layout::ColorsHeight);
+    texture.update(colorsPixels);
+    m_image = texture.copyToImage();
+}
 
 void Mode::updateState(State newState)
 {
-    previous = current;
+    m_previous = current;
     current = newState;
-    Logger::log(std::cout, "previous state", static_cast<int>(previous));
+    Logger::log(std::cout, "previous state", static_cast<int>(m_previous));
     Logger::log(std::cout, "current state", static_cast<int>(current));
     std::thread thr;
 
@@ -55,24 +64,40 @@ void Mode::updateState(State newState)
             break;
         case State::WriteFile:
             m_currentStateLetter = L"W";
-            save = true;
+            m_save = true;
             thr = std::thread(Mode::revertState, Mode::current);
             thr.detach();
             break;
         case State::OpenFile:
             m_currentStateLetter = L"O";
-            load = true;
+            m_load = true;
             thr = std::thread(Mode::revertState, Mode::current);
             thr.detach();
             break;
     }
 }
 
+void Mode::updateColor()
+{
+    const unsigned mouseX { static_cast<unsigned>(mousePosition.x) };
+    const unsigned mouseY { static_cast<unsigned>(mousePosition.y) };
+
+    if (mouseX >= minX && mouseX <= maxX && mouseY >= minY && mouseY <= maxY)
+    {
+        const sf::Color newColor { m_image.getPixel(mouseX - Layout::ColorsMargin,
+                                                    mouseY - Layout::ColorsMargin) };
+        if (current == State::ColorForeground)
+            colorForeground = newColor;
+        else
+            colorBackground = newColor;
+    }
+}
+
 bool Mode::saveRequested()
 {
-    if (save)
+    if (m_save)
     {
-        save = false;
+        m_save = false;
         return true;
     }
 
@@ -81,9 +106,9 @@ bool Mode::saveRequested()
 
 bool Mode::loadRequested()
 {
-    if (load)
+    if (m_load)
     {
-        load = false;
+        m_load = false;
         return true;
     }
 
@@ -100,8 +125,8 @@ void Mode::revertState(State beforeRevert)
     std::this_thread::sleep_for(std::chrono::milliseconds(Settings::StateRevertDelayMs));
     if (current == beforeRevert)
     {
-        if (previous != State::WriteFile && previous != State::OpenFile)
-            updateState(previous);
+        if (m_previous != State::WriteFile && m_previous != State::OpenFile)
+            updateState(m_previous);
         else
             updateState(State::None);
     }

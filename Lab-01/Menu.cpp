@@ -44,6 +44,7 @@ void Menu::initializeColors()
 
     m_colorsTexture.create(ColorsWidth, ColorsHeight);
     m_colorsTexture.update(m_colorsPixels);
+    Mode::initializeTexture(m_colorsPixels);
 
     m_colorsSprite.setTexture(m_colorsTexture);
     m_colorsSprite.setPosition(ColorsPosX, ColorsPosY);

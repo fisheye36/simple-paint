@@ -41,6 +41,10 @@ Shape * ShapeCollection::instantiateShape() const
 {
     switch (m_remembered)
     {
+        case State::ColorForeground:
+        case State::ColorBackground:
+            Mode::updateColor();
+            return nullptr;
         case State::Line:
             return new Line(m_initialShapePosition);
         case State::Rectangle:

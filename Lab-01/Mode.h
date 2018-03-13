@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Config.h"
+
 #include <string>
 
 #include <SFML/Graphics.hpp>
@@ -24,10 +26,11 @@ public:
     Mode() = delete;
     ~Mode() = delete;
 
+    static void initializeTexture(sf::Uint8 *colorsPixels);
     static void updateState(State newState);
     static void updateMousePosition(const sf::Vector2f& newMousePosition)
     { mousePosition = newMousePosition; }
-    static void updateColor() {}
+    static void updateColor();
 
     static bool saveRequested();
     static bool loadRequested();
@@ -44,7 +47,13 @@ public:
     static sf::Color colorBackground;
 
 private:
-    static State previous;
-    static bool save;
-    static bool load;
+    static const unsigned minX { Layout::ColorsPosX };
+    static const unsigned maxX { Layout::ColorsPosX + Layout::ColorsWidth };
+    static const unsigned minY { Layout::ColorsPosY };
+    static const unsigned maxY { Layout::ColorsPosY + Layout::ColorsHeight };
+
+    static sf::Image m_image;
+    static State m_previous;
+    static bool m_save;
+    static bool m_load;
 };
