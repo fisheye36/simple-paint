@@ -19,9 +19,9 @@ int main()
     window.setFramerateLimit(60u);
 
     sf::Event event;
+    Workspace workspace;
     ShapeCollection shapeCollection;
     Menu menu;
-    Workspace workspace;
 
     while (window.isOpen())
     {
@@ -37,6 +37,7 @@ int main()
             {
                 switch (event.key.code)
                 {
+                    case sf::Keyboard::Q:
                     case sf::Keyboard::Escape:
                         window.close();
                         break;
@@ -71,7 +72,7 @@ int main()
                 int mouseX = getValidCoordinates(event.mouseMove.x, 0, Layout::WinWidth);
                 int mouseY = getValidCoordinates(event.mouseMove.y, 0, Layout::WinHeight);
                 Mode::updateMousePosition(sf::Vector2f(mouseX, mouseY));
-                Logger::logPosition(std::cout, "mouse", mouseX, mouseY);
+                Logger::logPosition(std::cout, "mouse", Mode::mousePosition);
             }
             else if (event.type == sf::Event::MouseButtonPressed
                      && event.mouseButton.button == sf::Mouse::Left)
@@ -87,17 +88,18 @@ int main()
 
         if (Mode::loadRequested())
         {
+            Logger::log(std::cout, "loading image from file...");
             workspace.loadFromFile();
             shapeCollection.clear();
         }
-        else
-        {
-            window.draw(shapeCollection);
-        }
-        window.draw(menu);
         window.draw(workspace);
+        window.draw(shapeCollection);
+        window.draw(menu);
         if (Mode::saveRequested())
+        {
+            Logger::log(std::cout, "saving image to file...");
             workspace.saveToFile(window);
+        }
         window.display();
     }
 

@@ -1,7 +1,10 @@
 #include "Config.h"
+#include "Logger.h"
 #include "Mode.h"
 
 #include <chrono>
+#include <iostream>
+#include <sstream>
 #include <string>
 #include <thread>
 
@@ -23,6 +26,8 @@ void Mode::updateState(State newState)
 {
     previous = current;
     current = newState;
+    Logger::log(std::cout, "previous state", static_cast<int>(previous));
+    Logger::log(std::cout, "current state", static_cast<int>(current));
     std::thread thr;
 
     switch (current)
@@ -84,10 +89,22 @@ bool Mode::loadRequested()
 
     return false;
 }
-
 void Mode::revertState(State beforeRevert)
 {
+    std::ostringstream ostr;
+    ostr << std::this_thread::get_id();
+    std::string threadID { ostr.str() };
+
+    Logger::log(std::cout, "thread execution started with ID", threadID);
+
     std::this_thread::sleep_for(std::chrono::milliseconds(Settings::StateRevertDelayMs));
-    if (Mode::current == beforeRevert)
-        updateState(Mode::previous);
+    if (current == beforeRevert)
+    {
+        if (previous != State::WriteFile && previous != State::OpenFile)
+            updateState(previous);
+        else
+            updateState(State::None);
+    }
+
+    Logger::log(std::cout, "thread finished with ID", threadID);
 }

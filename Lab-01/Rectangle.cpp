@@ -8,7 +8,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
-inline Rectangle::Rectangle(const sf::Vector2f & startPosition) : Shape(startPosition)
+Rectangle::Rectangle(const sf::Vector2f & startPosition) : Shape(startPosition)
 {
     rectangle.setOutlineColor(Mode::colorForeground);
     rectangle.setFillColor(Mode::current == State::Rectangle ? sf::Color::Transparent
@@ -16,5 +16,5 @@ inline Rectangle::Rectangle(const sf::Vector2f & startPosition) : Shape(startPos
     rectangle.setOutlineThickness(1.0f);
     rectangle.setPosition(m_startPosition);
 
-    Logger::logPosition(std::cout, "rectangle", m_startPosition.x, m_startPosition.y);
+    Logger::logPosition(std::cout, "rectangle", m_startPosition);
 }

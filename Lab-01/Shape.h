@@ -13,7 +13,7 @@ class Shape : public sf::Drawable
 public:
     explicit Shape(const sf::Vector2f& startPosition) : m_startPosition(startPosition),
                                                         m_endPosition(startPosition)
-    { Logger::logPosition(std::cout, "shape", m_startPosition.x, m_startPosition.y); }
+    { Logger::logPosition(std::cout, "shape", m_startPosition); }
     virtual ~Shape() = default;
 
     virtual void update() { m_endPosition = Mode::mousePosition; }

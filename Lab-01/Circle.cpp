@@ -16,10 +16,10 @@ Circle::Circle(const sf::Vector2f & startPosition) : Shape(startPosition)
     circle.setOutlineThickness(1.0f);
     circle.setPosition(m_startPosition);
 
-    Logger::logPosition(std::cout, "circle", m_startPosition.x, m_startPosition.y);
+    Logger::logPosition(std::cout, "circle", m_startPosition);
 }
 
-inline void Circle::update()
+void Circle::update()
 {
     Shape::update();
     float radius { calculateRadius() };
@@ -27,7 +27,7 @@ inline void Circle::update()
     circle.setRadius(radius);
 }
 
-inline float Circle::calculateRadius() const
+float Circle::calculateRadius() const
 {
     sf::Vector2f diff { m_endPosition - m_startPosition };
     return std::sqrt(diff.x * diff.x + diff.y * diff.y);

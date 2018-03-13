@@ -39,23 +39,27 @@ namespace Layout
     const unsigned ToolbarRow2PosY  { ToolbarRow3PosY - ToolbarRowHeight };
     const unsigned ToolbarRow1PosY  { ToolbarRow2PosY - ToolbarRowHeight };
 
-    const unsigned WorkspaceMargin { 2u };
-    const unsigned WorkspaceWidth  { WinWidth - WorkspaceMargin * 2u };
-    const unsigned WorkspaceHeight { WinHeight - ColorsHeight - ColorsMargin
-                                     - ToolbarRowHeight * 3u - ToolbarMargin
-                                     - WorkspaceMargin * 2u };
-    const unsigned WorkspacePosX   { WorkspaceMargin };
-    const unsigned WorkspacePosY   { ColorsHeight + ColorsMargin + WorkspaceMargin };
+    const unsigned WorkspaceOutline { 1u };
+    const unsigned WorkspaceMargin  { 2u };
+    const unsigned WorkspaceWidth   { WinWidth - WorkspaceMargin * 2u };
+    const unsigned WorkspaceHeight  { WinHeight - ColorsHeight - ColorsMargin
+                                      - ToolbarRowHeight * 3u - ToolbarMargin
+                                      - WorkspaceMargin * 2u };
+    const unsigned WorkspacePosX    { WorkspaceMargin };
+    const unsigned WorkspacePosY    { ColorsHeight + ColorsMargin + WorkspaceMargin };
 
     const unsigned ColorsMaskWidth  { WinWidth };
-    const unsigned ColorsMaskHeight { ColorsHeight + ColorsMargin + WorkspaceMargin };
+    const unsigned ColorsMaskHeight { ColorsHeight + ColorsMargin + WorkspaceMargin
+                                      - WorkspaceOutline };
     const unsigned ColorsMaskPosX   { ColorsPosX - ColorsMargin };
     const unsigned ColorsMaskPosY   { ColorsPosY - ColorsMargin };
 
     const unsigned ToolbarMaskWidth  { WinWidth };
-    const unsigned ToolbarMaskHeight { ToolbarRowHeight * 3u + ToolbarMargin + WorkspaceMargin };
+    const unsigned ToolbarMaskHeight { ToolbarRowHeight * 3u + ToolbarMargin
+                                       + WorkspaceMargin - WorkspaceOutline };
     const unsigned ToolbarMaskPosX   { ToolbarCol1PosX - ToolbarMargin };
-    const unsigned ToolbarMaskPosY   { ToolbarRow1PosY - WorkspaceMargin };
+    const unsigned ToolbarMaskPosY   { ToolbarRow1PosY - WorkspaceMargin
+                                       + WorkspaceOutline };
 }
 
 namespace Settings

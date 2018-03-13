@@ -12,7 +12,7 @@ Workspace::Workspace()
     m_workspaceTexture.create(WorkspaceWidth, WorkspaceHeight);
     m_workspace.setFillColor(sf::Color::Transparent);
     m_workspace.setOutlineColor(sf::Color::White);
-    m_workspace.setOutlineThickness(1.0f);
+    m_workspace.setOutlineThickness(WorkspaceOutline);
     m_workspace.setPosition(WorkspacePosX, WorkspacePosY);
 }
 

@@ -34,6 +34,7 @@ void ShapeCollection::clear()
     for (auto shape : m_collection)
         delete shape;
     m_collection.clear();
+    Logger::log(std::cout, "collection cleared...");
 }
 
 Shape * ShapeCollection::instantiateShape() const
